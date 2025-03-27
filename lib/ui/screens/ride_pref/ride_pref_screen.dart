@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:week_3_blabla_project/provider/rides_pref_provider.dart';
 
 import '../../../model/ride/ride_pref.dart';
 import '../../../service/ride_prefs_service.dart';
@@ -16,14 +18,9 @@ const String blablaHomeImagePath = 'assets/images/blabla_home.png';
 /// - Enter his/her ride preference and launch a search on it
 /// - Or select a last entered ride preferences and launch a search on it
 ///
-class RidePrefScreen extends StatefulWidget {
+class RidePrefScreen extends StatelessWidget {
   const RidePrefScreen({super.key});
 
-  @override
-  State<RidePrefScreen> createState() => _RidePrefScreenState();
-}
-
-class _RidePrefScreenState extends State<RidePrefScreen> {
   onRidePrefSelected(RidePreference newPreference) async {
     // 1 - Update the current preference
     RidePrefService.instance.setCurrentPreference(newPreference);
@@ -38,10 +35,13 @@ class _RidePrefScreenState extends State<RidePrefScreen> {
 
   @override
   Widget build(BuildContext context) {
-    RidePreference? currentRidePreference =
-        RidePrefService.instance.currentPreference;
-    List<RidePreference> pastPreferences =
-        RidePrefService.instance.getPastPreferences();
+    final ridePreferenceProvider = Provider.of<RidesPrefProvider>(context);
+    final currentRidePreference = ridePreferenceProvider.setCurrentPreferrence();
+    
+    // RidePreference? currentRidePreference =
+    //     RidePrefService.instance.currentPreference;
+    // List<RidePreference> pastPreferences =
+    //     RidePrefService.instance.getPastPreferences();
 
     return Stack(
       children: [
