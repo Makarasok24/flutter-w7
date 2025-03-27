@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:week_3_blabla_project/provider/async_value.dart';
 import 'package:week_3_blabla_project/provider/rides_pref_provider.dart';
 import '../../../model/ride/ride_pref.dart';
 import '../../theme/theme.dart';
@@ -28,7 +29,7 @@ class RidePrefScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final ridePrefProvider = context.watch<RidesPrefProvider>();
     final currentRidePreference = ridePrefProvider.currentPreference;
-    final pastPreferences = ridePrefProvider.preferencesHistory;
+    final pastPreferences = ridePrefProvider.pastPreferences;
     return Stack(
       children: [
         // 1 - Background Image
@@ -61,17 +62,21 @@ class RidePrefScreen extends StatelessWidget {
                     const SizedBox(height: BlaSpacings.m),
 
                     // 2.2 Optionally display a list of past preferences
-                    if (pastPreferences.isNotEmpty)
+                    if (pastPreferences.state == AsyncValueState.loading)
+                      const Center(child: CircularProgressIndicator())
+                    else if (pastPreferences.state == AsyncValueState.error)
+                      Text('No connection. Please try again later.')
+                    else
                       SizedBox(
                         height: 200, // Set a fixed height
                         child: ListView.builder(
                           shrinkWrap: true,
                           physics: const AlwaysScrollableScrollPhysics(),
-                          itemCount: pastPreferences.length,
+                          itemCount: pastPreferences.data?.length,
                           itemBuilder: (ctx, index) => RidePrefHistoryTile(
-                            ridePref: pastPreferences[index],
+                            ridePref: pastPreferences.data![index],
                             onPressed: () => onRidePrefSelected(
-                                context, pastPreferences[index]),
+                                context, pastPreferences.data![index]),
                           ),
                         ),
                       ),

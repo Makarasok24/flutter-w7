@@ -1,25 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:week_3_blabla_project/model/ride/ride_pref.dart';
+import 'package:week_3_blabla_project/provider/async_value.dart';
 import 'package:week_3_blabla_project/repository/ride_preferences_repository.dart';
 // import 'package:week_3_blabla_project/repository/rides_repository.dart';
 
 class RidesPrefProvider extends ChangeNotifier {
   RidePreference? _currentPreference;
-  List<RidePreference> _pastPreferences = [];
+  late AsyncValue<List<RidePreference>> pastPreferences = AsyncValue.loading();
 
   final RidePreferencesRepository repository;
 
   RidesPrefProvider({required this.repository}) {
-    _fetchPastPreferences();
+    fetchPastPreferences();
   }
 
   RidePreference? get currentPreference => _currentPreference;
 
 // Fetch past preferences from the repository
-  void _fetchPastPreferences() async {
-    final List<RidePreference> fetchedPreferences =
-        await repository.getPastPreferences();
-    _pastPreferences.addAll(fetchedPreferences);
+  Future<void> fetchPastPreferences() async {
+    pastPreferences = AsyncValue.loading();
+    notifyListeners();
+    try {
+      final pastPrefs = await repository.getPastPreferences();
+      pastPreferences = AsyncValue.success(pastPrefs);
+    } catch (e) {
+      pastPreferences = AsyncValue.error(e);
+    }
     notifyListeners();
   }
 
@@ -33,12 +39,17 @@ class RidesPrefProvider extends ChangeNotifier {
   }
 
 // Add a preference to history
-  void _addPreference(RidePreference preference) {
-    _pastPreferences.add(preference);
-    notifyListeners();
+  Future<void> _addPreference(RidePreference preference) async {
+    try {
+      await repository.addPreference(preference);
+      pastPreferences.data?.add(preference);
+    } catch (e) {
+      pastPreferences = AsyncValue.error(e);
+    }
   }
 
   // History is returned from newest to oldest preference
-  List<RidePreference> get preferencesHistory =>
-      _pastPreferences.reversed.toList();
+  List<RidePreference> get preferencesHistory {
+    return pastPreferences.data?.reversed.toList() ?? [];
+  }
 }
