@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:week_3_blabla_project/provider/async_value.dart';
-import 'package:week_3_blabla_project/provider/rides_pref_provider.dart';
+import 'package:week_3_blabla_project/ui/provider/async_value.dart';
+import 'package:week_3_blabla_project/ui/provider/rides_pref_provider.dart';
 import '../../../model/ride/ride_pref.dart';
 import '../../theme/theme.dart';
 import '../../../utils/animations_util.dart';
