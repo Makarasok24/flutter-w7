@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import '../../../../model/ride/ride_pref.dart';
+import '../../../model/ride/ride_pref.dart';
 import '../ride_preferences_repository.dart';
 
 import '../../dummy_data/dummy_data.dart';

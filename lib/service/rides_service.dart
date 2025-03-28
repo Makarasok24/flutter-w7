@@ -1,7 +1,7 @@
-import '/model/ride/ride_filter.dart';
-import '/model/ride/ride_pref.dart';
+import '../model/ride/ride_filter.dart';
+import '../model/ride/ride_pref.dart';
 import '../data/repository/rides_repository.dart';
-import '/model/ride/ride.dart';
+import '../model/ride/ride.dart';
 
 ////
 ///   This service handles:
